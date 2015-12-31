@@ -16,6 +16,6 @@ class MessagesController < ApplicationController
   private
 
   def log_params
-    Rails.logger.info params
+    puts params
   end
 end
