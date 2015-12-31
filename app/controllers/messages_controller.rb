@@ -5,6 +5,7 @@ class MessagesController < ApplicationController
   end
 
   def create
+    ParamMessage.create(body: params.to_json.to_s)
   end
 
   def update
