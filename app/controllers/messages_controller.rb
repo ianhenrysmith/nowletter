@@ -1,4 +1,5 @@
 class MessagesController < ApplicationController
+  before_filter :save_params_for_debug
 
   # stages to processing an incoming SMS message:
   # 1. parse message operation
@@ -52,7 +53,9 @@ class MessagesController < ApplicationController
   private
 
   def save_params_for_debug
-    # ParamMessage.create(body: params.to_json.to_s)
+    unless Rails.env.test?
+      ParamMessage.create(body: params.to_json.to_s)
+    end
   end
 
   def message_attributes
@@ -68,7 +71,10 @@ class MessagesController < ApplicationController
   end
 
   def newsletter_for_message
-    @_newsletter ||= Newsletter.find_by(shortcode: @message.shortcode)
+    @_newsletter ||=
+      Newsletter.find(@message.shortcode)
+    rescue
+      nil
   end
 
   def handle_message
@@ -126,13 +132,14 @@ class MessagesController < ApplicationController
     end
   end
 
-  def subsribe_to_newsletter
+  def subscribe_to_newsletter
     @newsletter = newsletter_for_message
 
     if @newsletter
       @subscription = Subscription.find_by(user: @user, newsletter: @newsletter)
 
       if @subscription
+        # TODO: refactor action_taken
         # maybe could do something like:
         # { noun: subscription, verb: :create, success: false, reason: :non_duplication }
         :not_subscribed_to_newsletter_already_subscribed

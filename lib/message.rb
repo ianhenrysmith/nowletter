@@ -24,6 +24,7 @@ class Message
   end
 
   def shortcode
+    # usually a Newsletter id (gonna add slugs at some point)
     operand.split(" ")[0]
   end
 end
