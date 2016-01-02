@@ -43,7 +43,7 @@ class MessagesController < ApplicationController
     @action_taken = handle_message
 
     # 4. respond to message
-    # response = MessageResponder.respond(@action_taken, @message)
+    # response = MessageResponder.respond(@action_taken)
     # MessageSender.send(to: response.recipient, body: response.body)
 
     # this endpoint just talks to twilio, who don't listen back, so whatevs
@@ -62,6 +62,7 @@ class MessagesController < ApplicationController
     params.permit(:From, :Body)
   end
 
+  # finders
   def find_or_create_user_from_message
     @_user ||= User.find_or_create_by(phone_number: @message.phone_number)
   end
@@ -78,6 +79,9 @@ class MessagesController < ApplicationController
   end
 
   def handle_message
+    # other possible future use cases: stats, re-send, login...
+
+    # TODO: service objects for handling this business logic
     case @message.operation
     when :create
       # NEW 
@@ -98,23 +102,25 @@ class MessagesController < ApplicationController
     when :help
       # HELP 
       # send back a help text ?
+      {}
     else # :invalid
       # ?
       # maybe send back a help text
       # should log exception or something
+      {}
     end
-
-    # other possible future use cases: stats, re-send, add author...
   end
 
+  # actions
+  # will eventually be NewsletterCreator, PostCreator, etc.
   def create_newsletter
     @newsletter = newsletter_for_user
 
     if @newsletter
-      :already_created_newsletter
+      { noun: :newsletter, verb: :create, success: false, reason: :already_exists }
     else
       @newsletter = Newsletter.create(user: @user)
-      :created_newsletter
+      { noun: :newsletter, verb: :create, success: true }
     end
   end
 
@@ -126,9 +132,9 @@ class MessagesController < ApplicationController
       @post = Post.create(body: @message.body, newsletter: @newsletter)
 
       # TODO: send post!
-      :created_post
+      { noun: :post, verb: :create, success: true }
     else
-      :no_post_created_no_newsletter
+      { noun: :post, verb: :create, success: false, reason: :no_newsletter }
     end
   end
 
@@ -139,16 +145,14 @@ class MessagesController < ApplicationController
       @subscription = Subscription.find_by(user: @user, newsletter: @newsletter)
 
       if @subscription
-        # TODO: refactor action_taken
-        # maybe could do something like:
-        # { noun: subscription, verb: :create, success: false, reason: :non_duplication }
-        :not_subscribed_to_newsletter_already_subscribed
+        { noun: :subscription, verb: :create, success: false, reason: :already_exists }
       else
         @subscription = Subscription.create(user: @user, newsletter: @newsletter)
-        :subscribed_to_newsletter
+
+        { noun: :subscription, verb: :create, success: true }
       end
     else
-      :not_subscribed_no_newsletter
+      { noun: :subscription, verb: :create, success: false, reason: :no_newsletter }
     end
   end
 
@@ -160,12 +164,12 @@ class MessagesController < ApplicationController
 
       if @subscription
         @subscription.destroy
-        :unsubscribed_from_newsletter
+        { noun: :subscription, verb: :delete, success: true }
       else
-        :not_unsubscribed_to_newsletter_not_subscribed
+        { noun: :subscription, verb: :delete, success: false, reason: :no_subscription }
       end
     else
-      :not_unsubscribed_no_newsletter
+      { noun: :subscription, verb: :delete, success: false, reason: :no_newsletter }
     end
   end
 end
