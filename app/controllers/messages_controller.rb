@@ -36,10 +36,10 @@ class MessagesController < ApplicationController
     @message = Message.from_twilio(message_attributes)
 
     # 2. find or create user
-    @user = find_or_create_user_from_message(@message)
+    @user = find_or_create_user_from_message
 
     # 3. act on message
-    @action_taken = handle_message(@message)
+    @action_taken = handle_message
 
     # 4. respond to message
     # response = MessageResponder.respond(@action_taken, @message)
@@ -98,7 +98,7 @@ class MessagesController < ApplicationController
       # should log exception or something
     end
 
-    # other possible future use cases: stats, add author...
+    # other possible future use cases: stats, re-send, add author...
   end
 
   def create_newsletter
@@ -116,6 +116,7 @@ class MessagesController < ApplicationController
     @newsletter = newsletter_for_user
 
     if @newsletter
+      # TODO: handle blank message case
       @post = Post.create(body: @message.body, newsletter: @newsletter)
 
       # TODO: send post!
