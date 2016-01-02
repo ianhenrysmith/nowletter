@@ -1,4 +1,6 @@
 class MessagesController < ApplicationController
+  # skip_before_action :verify_authenticity_token
+
   before_filter :save_params_for_debug
 
   PHONE_NUMBER = "1-855-336-1427"
@@ -44,17 +46,18 @@ class MessagesController < ApplicationController
     @user = find_or_create_user_from_message
 
     # 3. act on message
-    responder = generate_responder(handle_message)
+    response = generate_response(handle_message)
 
     # 4. respond
-    responder.text
+    response.headers["Content-Type"] = "text/xml"
+    render text: response.text
   end
 
   private
 
-  def generate_responder(text)
-    Twilio::TwiML::Response.new do |response|
-      response.Message(text)
+  def generate_response(text)
+    Twilio::TwiML::Response.new do |twilio_response|
+      twilio_response.Message(text)
     end
   end
 
