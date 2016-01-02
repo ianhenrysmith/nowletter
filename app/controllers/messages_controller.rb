@@ -43,8 +43,7 @@ class MessagesController < ApplicationController
     @action_taken = handle_message
 
     # 4. respond to message
-    # response = MessageResponder.respond(@action_taken)
-    # MessageSender.send(to: response.recipient, body: response.body)
+    @response = respond_to_message
 
     # this endpoint just talks to twilio, who don't listen back, so whatevs
     render json: { action_taken: @action_taken }, status: :ok
@@ -62,9 +61,8 @@ class MessagesController < ApplicationController
     params.permit(:From, :Body)
   end
 
-  # finders
   def find_or_create_user_from_message
-    @_user ||= User.find_or_create_by(phone_number: @message.phone_number)
+    @_user ||= User.find_or_create_by(phone_number: @message.phone_number) if @message.valid?
   end
 
   def newsletter_for_user
@@ -109,6 +107,11 @@ class MessagesController < ApplicationController
       # should log exception or something
       {}
     end
+  end
+
+  def respond_to_message
+    # response = MessageResponder.respond(@action_taken)
+    # MessageSender.send(to: response.recipient, body: response.body)
   end
 
   # actions

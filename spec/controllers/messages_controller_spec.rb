@@ -215,8 +215,6 @@ RSpec.describe MessagesController, type: :controller do
           Subscription.count
         }
       end
-
-      # TODO: does not create a user
     end
 
     context "gibberish" do
@@ -238,7 +236,13 @@ RSpec.describe MessagesController, type: :controller do
         }
       end
 
-      # TODO: does not create a user
+      it "does not create a user" do
+        expect {
+          post :create, params
+        }.to_not change {
+          User.count
+        }
+      end
     end
   end
 end

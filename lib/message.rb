@@ -27,4 +27,8 @@ class Message
     # usually a Newsletter id (gonna add slugs at some point)
     operand.split(" ")[0]
   end
+
+  def valid?
+    operation.present?
+  end
 end
