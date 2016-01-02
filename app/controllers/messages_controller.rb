@@ -1,6 +1,8 @@
 class MessagesController < ApplicationController
   before_filter :save_params_for_debug
 
+  PHONE_NUMBER = "1-855-336-1427"
+
   # stages to processing an incoming SMS message:
   # 1. parse message operation
   # 2. find or create user (in most cases)
@@ -36,20 +38,25 @@ class MessagesController < ApplicationController
     # 1. parse
     @message = Message.from_twilio(message_attributes)
 
+    return unless @message.valid?
+
     # 2. find or create user
     @user = find_or_create_user_from_message
 
     # 3. act on message
-    @action_taken = handle_message
+    responder = generate_responder(handle_message)
 
-    # 4. respond to message
-    @response = respond_to_message
-
-    # this endpoint just talks to twilio, who don't listen back, so whatevs
-    render json: { action_taken: @action_taken }, status: :ok
+    # 4. respond
+    responder.text
   end
 
   private
+
+  def generate_responder(text)
+    Twilio::TwiML::Response.new do |response|
+      response.Message(text)
+    end
+  end
 
   def save_params_for_debug
     unless Rails.env.test?
@@ -62,7 +69,7 @@ class MessagesController < ApplicationController
   end
 
   def find_or_create_user_from_message
-    @_user ||= User.find_or_create_by(phone_number: @message.phone_number) if @message.valid?
+    @_user ||= User.find_or_create_by(phone_number: @message.phone_number)
   end
 
   def newsletter_for_user
@@ -100,18 +107,13 @@ class MessagesController < ApplicationController
     when :help
       # HELP 
       # send back a help text ?
-      {}
+      "NEW: create newsletter, SEND <message>: send newsletter, SUB <newsletter id> subscribe, UNSUB <newsletter id>: unsubscribe"
     else # :invalid
       # ?
       # maybe send back a help text
       # should log exception or something
-      {}
+      nil
     end
-  end
-
-  def respond_to_message
-    # response = MessageResponder.respond(@action_taken)
-    # MessageSender.send(to: response.recipient, body: response.body)
   end
 
   # actions
@@ -120,10 +122,11 @@ class MessagesController < ApplicationController
     @newsletter = newsletter_for_user
 
     if @newsletter
-      { noun: :newsletter, verb: :create, success: false, reason: :already_exists }
+      "Everyone can subscribe to your Nowletter by texting SUB #{@newsletter.id} to #{PHONE_NUMBER}"
     else
       @newsletter = Newsletter.create(user: @user)
-      { noun: :newsletter, verb: :create, success: true }
+
+      "Welcome! Everyone can subscribe to your Nowletter by texting SUB #{@newsletter.id} to #{PHONE_NUMBER}"
     end
   end
 
@@ -135,9 +138,9 @@ class MessagesController < ApplicationController
       @post = Post.create(body: @message.body, newsletter: @newsletter)
 
       # TODO: send post!
-      { noun: :post, verb: :create, success: true }
+      "Your new Nowletter is on its way!"
     else
-      { noun: :post, verb: :create, success: false, reason: :no_newsletter }
+      "Create a Nowletter first by texting NEW to #{PHONE_NUMBER}"
     end
   end
 
@@ -148,14 +151,14 @@ class MessagesController < ApplicationController
       @subscription = Subscription.find_by(user: @user, newsletter: @newsletter)
 
       if @subscription
-        { noun: :subscription, verb: :create, success: false, reason: :already_exists }
+        "You're already subscribed to this list"
       else
         @subscription = Subscription.create(user: @user, newsletter: @newsletter)
 
-        { noun: :subscription, verb: :create, success: true }
+        "Great! You'll now get updates for this list."
       end
     else
-      { noun: :subscription, verb: :create, success: false, reason: :no_newsletter }
+      "Couldn't find that list, did you type it in correctly?"
     end
   end
 
@@ -167,12 +170,12 @@ class MessagesController < ApplicationController
 
       if @subscription
         @subscription.destroy
-        { noun: :subscription, verb: :delete, success: true }
+        "Unsubscribed."
       else
-        { noun: :subscription, verb: :delete, success: false, reason: :no_subscription }
+        nil # not subscribed
       end
     else
-      { noun: :subscription, verb: :delete, success: false, reason: :no_newsletter }
+      "Couldn't find that list, did you type it in correctly?"
     end
   end
 end

@@ -6,6 +6,11 @@ RSpec.describe MessagesController, type: :controller do
   let(:user) { User.create(phone_number: phone_number) }
   let(:creator_user) { User.create(phone_number: "+13033990315") }
   let(:subscription_newsletter) { Newsletter.create(user: creator_user) }
+  let(:mock_responder) { double("responder", text: true) }
+
+  before do
+    allow(subject).to receive(:generate_responder).and_return(mock_responder)
+  end
 
   describe "#create" do
     context "new newsletter" do
