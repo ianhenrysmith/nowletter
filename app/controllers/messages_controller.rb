@@ -46,11 +46,11 @@ class MessagesController < ApplicationController
     @user = find_or_create_user_from_message
 
     # 3. act on message
-    response = generate_response(handle_message)
+    twilio_response = generate_response(handle_message)
 
     # 4. respond
     response.headers["Content-Type"] = "text/xml"
-    render text: response.text
+    render text: twilio_response.text
   end
 
   private
