@@ -25,6 +25,10 @@ group :development, :test do
   gem "heroku_san"
   gem "byebug"
   gem "rspec-rails", ">= 2.0.1"
+  gem "shoulda-matchers"
+  gem "factory_girl_rails"
+  gem "database_cleaner", require: false
+  gem "faker"
 end
 
 group :development do

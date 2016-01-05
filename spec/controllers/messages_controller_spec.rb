@@ -3,9 +3,9 @@ require "rails_helper"
 RSpec.describe MessagesController, type: :controller do
   let(:params) { { :From => phone_number, :Body => body } }
   let(:phone_number) { "+17202407787" }
-  let(:user) { User.create(phone_number: phone_number) }
-  let(:creator_user) { User.create(phone_number: "+13033990315") }
-  let(:subscription_newsletter) { Newsletter.create(user: creator_user) }
+  let(:user) { create(:user, phone_number: phone_number) }
+  let(:creator_user) { create(:user, phone_number: "+13033990315") }
+  let(:subscription_newsletter) { create(:newsletter, user: creator_user) }
   let(:mock_responder) { double("responder", text: true, headers: {}) }
 
   before do
@@ -58,7 +58,7 @@ RSpec.describe MessagesController, type: :controller do
 
       context "existing newsletter" do
         before do
-          Newsletter.create(user: user)
+          create(:newsletter, user: user)
         end
 
         it "does not create a newsletter" do
@@ -82,15 +82,25 @@ RSpec.describe MessagesController, type: :controller do
     context "new post" do
       let(:body) { "SEND hello faces and junk" }
 
+      before do
+        allow(NewsletterSender).to receive(:perform_async).and_return(true)
+      end
+
       context "with newsletter" do
         before do
-          Newsletter.create(user: user)
+          create(:newsletter, user: user)
         end
 
         it "creates a post" do
           post :create, params
           
           expect(Post.last.body).to eql("hello faces and junk")
+        end
+
+        it "sends a newsletter" do
+          post :create, params
+
+          expect(NewsletterSender).to have_received(:perform_async).with(Newsletter.last.id, Post.last.id)
         end
       end
 
@@ -164,7 +174,7 @@ RSpec.describe MessagesController, type: :controller do
 
         context "with subscription" do
           before do
-            Subscription.create(user: user, newsletter: newsletter)
+            create(:subscription, user: user, newsletter: newsletter)
           end
 
           it "removes the subscription" do

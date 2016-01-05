@@ -2,6 +2,7 @@ class NewsletterSender
   include Sidekiq::Worker
 
   def perform(newsletter_id, post_id)
+    # don't really need newsletter id here
     newsletter = Newsletter.find(newsletter_id)
     post = Post.find(post_id)
 
@@ -9,8 +10,8 @@ class NewsletterSender
       user = subscription.user
 
       TextSender.deliver(post.body, user.phone_number)
-
-      # TODO: mark post as sent
     end
+
+    # TODO: mark post as sent
   end
 end
