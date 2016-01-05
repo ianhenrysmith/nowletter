@@ -7,16 +7,17 @@ RSpec.describe NewsletterSender do
   let(:subscriber) { create(:user) }
   let(:post) { create(:post, newsletter: newsletter) }
   let!(:subscription) { create(:subscription, user: subscriber, newsletter: newsletter) }
+  let(:mock_text_sender) { double("text_sender", deliver: true) }
 
   before do
-    allow(TextSender).to receive(:deliver).and_return(true)
+    allow(TextSender).to receive(:new).and_return(mock_text_sender)
   end
 
   describe "#perform" do
     it "sends the post to subscriber" do
       subject.perform(newsletter.id, post.id)
 
-      expect(TextSender).to have_received(:deliver).with(post.body, subscriber.phone_number)
+      expect(mock_text_sender).to have_received(:deliver).with(post.body, subscriber.phone_number)
     end
   end
 end

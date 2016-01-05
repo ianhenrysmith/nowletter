@@ -9,7 +9,7 @@ class NewsletterSender
     newsletter.subscriptions.each do |subscription|
       user = subscription.user
 
-      TextSender.deliver(post.body, user.phone_number)
+      TextSender.new.deliver(post.body, user.phone_number)
     end
 
     # TODO: mark post as sent
