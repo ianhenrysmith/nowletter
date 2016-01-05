@@ -3,8 +3,8 @@ class TextSender
   # https://www.twilio.com/blog/2014/10/twilio-on-rails-part-2-rails-4-app-sending-sms-mms.html
 
   def self.deliver(body, phone_number)
-    twilio_sid = "AC079fe4205ca69a6f4a8f1d601d515760"
-    twilio_token = "2d6ee0ce52e0e8f2e5489fe3c2c54a1b"
+    twilio_sid = ENV["TWILIO_SID"]
+    twilio_token = ENV["TWILIO_TOKEN"] 
     twilio_phone_number = "+18553361427"
 
     twilio_client = Twilio::REST::Client.new(twilio_sid, twilio_token)
