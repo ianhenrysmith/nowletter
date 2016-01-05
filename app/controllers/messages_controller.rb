@@ -119,8 +119,7 @@ class MessagesController < ApplicationController
     end
   end
 
-  # actions
-  # will eventually be NewsletterCreator, PostCreator, etc.
+  # TODO: NewsletterCreator
   def create_newsletter
     @newsletter = newsletter_for_user
 
@@ -133,20 +132,23 @@ class MessagesController < ApplicationController
     end
   end
 
+  # TODO: PostCreator
   def create_post
     @newsletter = newsletter_for_user
 
     if @newsletter
       # TODO: handle blank message case
-      @post = Post.create(body: @message.body, newsletter: @newsletter)
+      @post = Post.create(body: @message.operand, newsletter: @newsletter)
 
-      # TODO: send post!
+      NewsletterSender.perform_async(@newsletter.id, @post.id)
+
       "Your new Nowletter is on its way!"
     else
       "Create a Nowletter first by texting NEW to #{PHONE_NUMBER}"
     end
   end
 
+  # TODO: SubscriptionCreator
   def subscribe_to_newsletter
     @newsletter = newsletter_for_message
 
@@ -165,6 +167,7 @@ class MessagesController < ApplicationController
     end
   end
 
+  # TODO: SubscriptionDestroyer
   def unsubscribe_from_newsletter
     @newsletter = newsletter_for_message
 

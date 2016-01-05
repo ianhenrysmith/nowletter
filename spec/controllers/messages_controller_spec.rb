@@ -88,11 +88,9 @@ RSpec.describe MessagesController, type: :controller do
         end
 
         it "creates a post" do
-          expect {
-            post :create, params
-          }.to change {
-            Post.count
-          }.by(1)
+          post :create, params
+          
+          expect(Post.last.body).to eql("hello faces and junk")
         end
       end
 
