@@ -1,0 +1,15 @@
+---
+:timeout: 1800 # 30 minutes
+:concurrency: <%= ENV['JOB_CONCURRENCY'] || 5 %>
+:pidfile: tmp/pids/sidekiq.pid
+staging:
+  :concurrency: <%= ENV['JOB_CONCURRENCY'] || 2 %>
+production:
+  :concurrency: <%= ENV['JOB_CONCURRENCY'] || 2 %>
+demo:
+  :concurrency: <%= ENV['JOB_CONCURRENCY'] || 2 %>
+:queues:
+  - [low, 1]
+  - [default, 2]
+  - [high, 4]
+  - [critical, 8]
