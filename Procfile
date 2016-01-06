@@ -1,2 +1,2 @@
-web: bundle exec unicorn
+web: bundle exec rails server
 worker: bundle exec sidekiq
