@@ -8,9 +8,7 @@ gem "twilio-ruby"
 
 gem "sidekiq"
 
-group :production do
-  gem "unicorn"
-end
+gem "puma"
 
 gem "sass-rails", "~> 5.0"
 gem "uglifier", ">= 1.3.0"
