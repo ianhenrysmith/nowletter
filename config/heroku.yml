@@ -13,7 +13,6 @@
 production:
   app: nowletter
   stack: cedar-14
-  tag: production/*
   config: &default
     BUNDLE_WITHOUT: "development:test"
     GOOGLE_ANALYTICS: "UA-12345678-1"

@@ -3,8 +3,6 @@ class MessagesController < ApplicationController
 
   before_filter :save_params_for_debug
 
-  PHONE_NUMBER = "1-855-336-1427"
-
   # stages to processing an incoming SMS message:
   # 1. parse message operation
   # 2. find or create user (in most cases)
@@ -124,11 +122,11 @@ class MessagesController < ApplicationController
     @newsletter = newsletter_for_user
 
     if @newsletter
-      "Everyone can subscribe to your Nowletter by texting SUB #{@newsletter.id} to #{PHONE_NUMBER}"
+      "Everyone can subscribe to your Nowletter by texting SUB #{@newsletter.id} to #{ENV["FRIENDLY_PHONE_NUMBER"]}"
     else
       @newsletter = Newsletter.create(user: @user)
 
-      "Welcome! Everyone can subscribe to your Nowletter by texting SUB #{@newsletter.id} to #{PHONE_NUMBER}"
+      "Welcome! Everyone can subscribe to your Nowletter by texting SUB #{@newsletter.id} to #{ENV["FRIENDLY_PHONE_NUMBER"]}"
     end
   end
 
@@ -144,7 +142,7 @@ class MessagesController < ApplicationController
 
       "Your new Nowletter is on its way!"
     else
-      "Create a Nowletter first by texting NEW to #{PHONE_NUMBER}"
+      "Create a Nowletter first by texting NEW to #{ENV["FRIENDLY_PHONE_NUMBER"]}"
     end
   end
 
