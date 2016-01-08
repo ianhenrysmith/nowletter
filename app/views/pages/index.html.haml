@@ -1,0 +1,24 @@
+%head
+  = render partial: "style/normalize"
+  = render partial: "style/skeleton"
+  = render partial: "style/custom"
+
+  %meta{name: "google-site-verification", content: "PWRxqZjPJngV5d9gzvSROJ7OMcZHQWxSPNP8ct13TkY"}
+  
+.container
+  .row.section
+    .large-text Nowletter is newsletters by text
+
+  .row.section
+    .medium-text="Text NEW to #{ENV["FRIENDLY_PHONE_NUMBER"]} to start"
+
+  .row.section
+    .medium-text First 100 texts free. $10/mo for 1000 texts after that.
+
+  %hr
+    .small-text
+      Questions? Need help?
+      %a.email-link{mailto: "support@nowletter.com"} support@nowletter.com
+    .small-text
+      Want a feature?
+      %a.email-link{mailto: "product@nowletter.com"} product@nowletter.com

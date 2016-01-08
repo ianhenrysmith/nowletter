@@ -5,8 +5,6 @@ staging:
   :concurrency: <%= ENV['JOB_CONCURRENCY'] || 2 %>
 production:
   :concurrency: <%= ENV['JOB_CONCURRENCY'] || 2 %>
-demo:
-  :concurrency: <%= ENV['JOB_CONCURRENCY'] || 2 %>
 :queues:
   - [low, 1]
   - [default, 2]
