@@ -1,10 +1,9 @@
-class NewsletterSender
+class PostSender
   include Sidekiq::Worker
 
-  def perform(newsletter_id, post_id)
-    # don't really need newsletter id here
-    newsletter = Newsletter.find(newsletter_id)
+  def perform(post_id)
     post = Post.find(post_id)
+    newsletter = post.newsletter
 
     newsletter.subscriptions.each do |subscription|
       user = subscription.user

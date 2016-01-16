@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe NewsletterSender do
+RSpec.describe PostSender do
   subject { described_class.new }
   let(:newsletter) { create(:newsletter, user: creator) }
   let(:creator) { create(:user) }
@@ -15,7 +15,7 @@ RSpec.describe NewsletterSender do
 
   describe "#perform" do
     it "sends the post to subscriber" do
-      subject.perform(newsletter.id, post.id)
+      subject.perform(post.id)
 
       expect(mock_text_sender).to have_received(:deliver).with(post.body, subscriber.phone_number)
     end
