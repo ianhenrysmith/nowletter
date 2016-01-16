@@ -1,7 +1,7 @@
 class NewsletterMessagesController < ApplicationController
   include MessagesController
 
-  SEND_KEYWORDS = %(yes y yup send ok please okay ya mhmm do deliver ye yess yep)
+  SEND_KEYWORDS = %w(yes y yup send ok please okay ya mhmm do deliver ye yess yep uhuh si verdad)
 
   def create
     text = if newsletter
