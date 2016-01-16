@@ -2,20 +2,51 @@
   = render partial: "style/normalize"
   = render partial: "style/skeleton"
   = render partial: "style/custom"
+  = render partial: "style/tribe"
 
   %meta{name: "google-site-verification", content: "PWRxqZjPJngV5d9gzvSROJ7OMcZHQWxSPNP8ct13TkY"}
 
-.container
-  .row.section
-    .large-text Nowletter is newsletters by text
+/ .container
+/   .row.section
+/     .large-text Nowletter is newsletters by text
 
-  .row.section
-    .medium-text="Text Hello to #{ENV["FRIENDLY_PUBLISH_PHONE_NUMBER"]} to start"
+/   .row.section
+/     .medium-text="Text Hello to #{ENV["FRIENDLY_PUBLISH_PHONE_NUMBER"]} to start"
 
-  .row.section
-    .medium-text First 100 texts free. $10/mo for 1000 texts after that.
+/   .row.section
+/     .medium-text First 100 texts free. $10/mo for 1000 texts after that.
 
-  %hr
-    .small-text
-      Questions? Need help? Want a feature?
-      %a.email-link{mailto: "hello@nowletter.com"} hello@nowletter.com
+/   %hr
+/     .small-text
+/       Questions? Need help? Want a feature?
+/       %a.email-link{mailto: "hello@nowletter.com"} hello@nowletter.com
+
+%body
+  .container
+    %section.header
+      %h2.title Nowletter is newsletters by text
+
+      %h6.docs-header Get started now:
+      %h4
+        text
+        %span.orange-text hello
+        to
+        %span.blue-text="#{ENV["FRIENDLY_PUBLISH_PHONE_NUMBER"]}"
+
+      .value-props.row
+        .four.columns.value-prop
+          %b Easy:
+          a couple setup texts and you're ready to go.
+        .four.columns.value-prop
+          %b High engagement:
+          Over 90% of texts are opened within minutes.
+        .four.columns.value-prop
+          %b Scalable:
+          send to just a couple recipients, or thousands.
+
+    .header.docs-section
+      %h6
+        First 100 texts free. $20/mo for 1000 texts after that.
+      %h6
+        Questions? Need help? Want a feature?
+        %a.email-link{mailto: "hello@nowletter.com"}hello@nowletter.com
