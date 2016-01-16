@@ -7,7 +7,7 @@ class TextSender
     # [DEPRECATED] SMS Resource is deprecated. Please use Messages (https://www.twilio.com/docs/api/rest/message)
 
     message.create(
-      from: ENV["PUBLISH_PHONE_NUMBER"],
+      from: ENV["SUBSCRIBE_PHONE_NUMBER"],
       to: phone_number,
       body: body
     )
