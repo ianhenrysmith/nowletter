@@ -15,7 +15,7 @@ RSpec.describe TextSender do
       subject.deliver(body, phone_number)
 
       expect(mock_message).to have_received(:create).with({
-        from: ENV["PHONE_NUMBER"],
+        from: ENV["PUBLISH_PHONE_NUMBER"],
         to: phone_number,
         body: body
       })
