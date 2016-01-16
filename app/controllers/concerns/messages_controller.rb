@@ -37,7 +37,7 @@ concern :MessagesController do
   private
 
   def subscription_phone_number
-    ENV["FRIENDLY_SUBSCRIPTION_PHONE_NUMBER"]
+    ENV["FRIENDLY_SUBSCRIBE_PHONE_NUMBER"]
   end
 
   def support_email
