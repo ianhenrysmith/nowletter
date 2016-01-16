@@ -4,12 +4,15 @@ gem "rails", "4.2.5"
 
 gem "pg"
 
+gem "devise"
+
 gem "twilio-ruby"
 
 gem "sidekiq"
 
 gem "puma"
 
+# assets
 gem "sass-rails", "~> 5.0"
 gem "uglifier", ">= 1.3.0"
 gem "coffee-rails", "~> 4.1.0"
@@ -21,7 +24,6 @@ gem "haml", ">= 3.0.0"
 gem "haml-rails"
 
 group :development, :test do
-  gem "heroku_san"
   gem "byebug"
   gem "rspec-rails", ">= 2.0.1"
   gem "shoulda-matchers"
@@ -33,4 +35,5 @@ end
 group :development do
   gem "web-console", "~> 2.0"
   gem "spring"
+  gem "heroku_san"
 end
