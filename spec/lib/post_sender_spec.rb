@@ -19,5 +19,21 @@ RSpec.describe PostSender do
 
       expect(mock_text_sender).to have_received(:deliver).with(post.body, subscriber.phone_number)
     end
+
+    it "increments send count on newsletter" do
+      expect {
+        subject.perform(post.id)
+      }.to change {
+        newsletter.reload.send_count
+      }.from(0).to(1)
+    end
+
+    it "sets sent_at on post" do
+      expect {
+        subject.perform(post.id)
+      }.to change {
+        post.reload.sent_at.present?
+      }.from(false).to(true)
+    end
   end
 end

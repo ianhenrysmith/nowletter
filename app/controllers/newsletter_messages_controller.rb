@@ -51,8 +51,12 @@ class NewsletterMessagesController < ApplicationController
   def send_post
     post = newsletter.posts.last
 
-    PostSender.perform_async(post.id)
+    if post.sent_at.present?
+      "Looks like you've already sent your newsletter. You can make a new one though!"
+    else
+      PostSender.perform_async(post.id)
 
-    "Great, sending it!"
+      "Great, sending it!"
+    end
   end
 end

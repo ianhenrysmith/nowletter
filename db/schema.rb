@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160116150417) do
+ActiveRecord::Schema.define(version: 20160116232409) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,9 +19,10 @@ ActiveRecord::Schema.define(version: 20160116150417) do
   create_table "newsletters", force: :cascade do |t|
     t.string   "title"
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
     t.string   "slug"
+    t.integer  "send_count", default: 0
   end
 
   add_index "newsletters", ["user_id"], name: "index_newsletters_on_user_id", using: :btree
@@ -35,6 +36,7 @@ ActiveRecord::Schema.define(version: 20160116150417) do
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
     t.string   "body"
+    t.datetime "sent_at"
   end
 
   add_index "posts", ["newsletter_id"], name: "index_posts_on_newsletter_id", using: :btree

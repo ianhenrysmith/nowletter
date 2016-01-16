@@ -105,6 +105,18 @@ RSpec.describe NewsletterMessagesController, type: :controller do
         allow(PostSender).to receive(:perform_async).and_return(true)
       end
 
+      context "already sent the post before" do
+        before do
+          Post.last.update_attribute(:sent_at, Time.now)
+        end
+
+        it "doesn't sends the newsletter" do
+          post :create, params
+
+          expect(PostSender).to_not have_received(:perform_async)
+        end
+      end
+
       it "sends a newsletter" do
         post :create, params
 
