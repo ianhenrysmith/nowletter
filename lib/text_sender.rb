@@ -3,9 +3,6 @@ class TextSender
   # https://www.twilio.com/blog/2014/10/twilio-on-rails-part-2-rails-4-app-sending-sms-mms.html
 
   def deliver(body, phone_number)
-    # TODO: update resource used
-    # [DEPRECATED] SMS Resource is deprecated. Please use Messages (https://www.twilio.com/docs/api/rest/message)
-
     message.create(
       from: ENV["SUBSCRIBE_PHONE_NUMBER"],
       to: phone_number,
@@ -23,6 +20,6 @@ class TextSender
   end
 
   def message
-    client.account.sms.messages
+    client.messages
   end
 end
