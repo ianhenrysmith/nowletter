@@ -1,0 +1,18 @@
+%head
+  = render partial: "style/normalize"
+  = render partial: "style/skeleton"
+  = render partial: "style/custom"
+  = render partial: "style/tribe"
+
+  %meta{name: "google-site-verification", content: "PWRxqZjPJngV5d9gzvSROJ7OMcZHQWxSPNP8ct13TkY"}
+  %title Nowletter: newsletters by text
+  = favicon_link_tag "favicon.ico"
+  
+%body
+  .container
+    = yield
+
+  .header.docs-section
+    %h6
+      Questions? Need help? Want a feature?
+      %a.email-link{mailto: "hello@nowletter.com"}hello@nowletter.com

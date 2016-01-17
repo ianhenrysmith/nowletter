@@ -1,7 +1,6 @@
-class PagesController < ActionController::Base
-  def index
-  end
+class PagesController < ApplicationController
+  layout "application"
 
-  def home
+  def index
   end
 end
